@@ -1,30 +1,35 @@
 // src/components/PropertyCard.js
-import React from "react";
+import { useState } from "react";
+import "../styles/PropertyCard.css";
 
-function PropertyCard({ property }) {
+export default function PropertyCard({ property }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div
-      style={{ border: "1px solid #ccc", padding: "1rem", margin: "1rem 0" }}
-    >
-      <h2>{property.name}</h2>
-      <p>
-        <strong>Address:</strong> {property.address}
-      </p>
-      <p>
-        <strong>Tenant:</strong> {property.tenant}
-      </p>
-      <p>
-        <strong>Rent:</strong> €{property.rent}
-      </p>
-      <p>
-        <strong>Lease:</strong> {property.leaseStart} → {property.leaseEnd}
-      </p>
-      <p>
-        <strong>Status:</strong>
-        {property.isPaid ? " ✅ Rent Paid" : " ❌ Rent Not Paid"}
-      </p>
+    <div className="property-card">
+      <div className="card-header" onClick={() => setIsOpen(!isOpen)}>
+        <h2>{property.name}</h2>
+        <p>{property.address}</p>
+        <button>{isOpen ? "Hide Details" : "Show Details"}</button>
+      </div>
+
+      {isOpen && (
+        <div className="card-details">
+          <p>
+            <strong>Monthly Rent:</strong> €{property.rent}
+          </p>
+          <p>
+            <strong>Landlord:</strong> {property.landlord}
+          </p>
+          <p>
+            <strong>Contract:</strong> {property.contractStart} -{" "}
+            {property.contractEnd}
+          </p>
+          <p>
+            <strong>Tenant:</strong> {property.tenantContact}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
-
-export default PropertyCard;
