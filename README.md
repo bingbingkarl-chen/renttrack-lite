@@ -15,7 +15,6 @@ This is a personal learning project by Bingbing Karl-Chen, aiming to gradually d
 
 - Practice front-end development with React
 - Build a tool for tracking rental property performance
-- Improve portfolio for future job applications
 
 ## 📦 Getting Started
 
