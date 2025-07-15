@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom"; // ✅ 删除 BrowserRouter/Router
 import PropertyCard from "./components/PropertyCard";
 import propertyData from "./data/propertyData";
 import PropertyDetail from "./pages/PropertyDetail";
 import "./styles/App.css";
 import PaymentSummary from "./components/PaymentSummary";
+import AddPropertyForm from "./components/AddPropertyForm";
 
 function App() {
   const [propertyList, setPropertyList] = useState(() => {
@@ -24,18 +25,34 @@ function App() {
     );
   };
 
+  const addProperty = (newProperty) => {
+    const updatedList = [newProperty, ...propertyList];
+    setPropertyList(updatedList);
+    localStorage.setItem("renttrack-data", JSON.stringify(updatedList));
+  };
+
   return (
     <div className="app-container">
       <h1>RentTrack Lite</h1>
-      <PaymentSummary propertyList={propertyList} />
-      {propertyList.map((property) => (
-        <PropertyCard
-          key={property.id}
-          property={property}
-          onTogglePaid={togglePaidStatus}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <AddPropertyForm onAdd={addProperty} />
+              {propertyList.map((property) => (
+                <PropertyCard
+                  key={property.id}
+                  property={property}
+                  onTogglePaid={togglePaidStatus}
+                />
+              ))}
+            </>
+          }
         />
-      ))}
+      </Routes>
     </div>
   );
 }
+
 export default App;
