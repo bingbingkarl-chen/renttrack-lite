@@ -1,51 +1,70 @@
 import React, { useState } from "react";
 
-const AddPropertyForm = ({ onAdd }) => {
+function AddPropertyForm({ onAdd }) {
   const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("");
   const [rent, setRent] = useState("");
+  const [deposit, setDeposit] = useState("");
   const [image, setImage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title || !rent || !image) return;
 
     const newProperty = {
       id: Date.now(),
       title,
+      location,
       rent,
-      image,
+      deposit,
       isPaid: false,
+      image,
     };
 
     onAdd(newProperty);
+
+    // 清空表单
     setTitle("");
+    setLocation("");
     setRent("");
+    setDeposit("");
     setImage("");
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
+    <form onSubmit={handleSubmit} className="add-property-form">
       <input
         type="text"
-        placeholder="Property title"
+        placeholder="Property Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
       <input
         type="text"
-        placeholder="Monthly rent"
+        placeholder="Location"
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Rent"
         value={rent}
         onChange={(e) => setRent(e.target.value)}
       />
       <input
         type="text"
-        placeholder="Image URL"
+        placeholder="Deposit"
+        value={deposit}
+        onChange={(e) => setDeposit(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Image URL (optional)"
         value={image}
         onChange={(e) => setImage(e.target.value)}
       />
       <button type="submit">Add Property</button>
     </form>
   );
-};
+}
 
 export default AddPropertyForm;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom"; // ✅ 删除 BrowserRouter/Router
+import { Routes, Route } from "react-router-dom";
 import PropertyCard from "./components/PropertyCard";
 import propertyData from "./data/propertyData";
 import PropertyDetail from "./pages/PropertyDetail";
@@ -30,10 +30,16 @@ function App() {
     setPropertyList(updatedList);
     localStorage.setItem("renttrack-data", JSON.stringify(updatedList));
   };
+  const handleDelete = (id) => {
+    const filteredList = propertyList.filter((item) => item.id !== id);
+    setPropertyList(filteredList);
+    localStorage.setItem("renttrack-data", JSON.stringify(filteredList));
+  };
 
   return (
     <div className="app-container">
       <h1>RentTrack Lite</h1>
+      <PaymentSummary propertyList={propertyList} />
       <Routes>
         <Route
           path="/"
@@ -45,6 +51,7 @@ function App() {
                   key={property.id}
                   property={property}
                   onTogglePaid={togglePaidStatus}
+                  onDelete={handleDelete}
                 />
               ))}
             </>

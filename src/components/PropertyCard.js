@@ -2,7 +2,7 @@
 import React from "react";
 import "../styles/PropertyCard.css";
 import { Link } from "react-router-dom";
-const PropertyCard = ({ property, onTogglePaid }) => {
+const PropertyCard = ({ property, onTogglePaid, onDelete }) => {
   return (
     <div className={`property-card ${property.isPaid ? "paid" : "unpaid"}`}>
       <img
@@ -21,6 +21,12 @@ const PropertyCard = ({ property, onTogglePaid }) => {
       <p>{property.isPaid ? "✅ Paid" : "❌ Not Paid"}</p>
       <button onClick={() => onTogglePaid(property.id)}>
         {property.isPaid ? "Mark as Unpaid" : "Mark as Paid"}
+      </button>
+      <button
+        onClick={() => onDelete(property.id)}
+        style={{ marginLeft: "10px", color: "red" }}
+      >
+        🗑️ Delete
       </button>
       <p className="property-snippet">
         {property.description ? property.description.slice(0, 50) + "..." : ""}
