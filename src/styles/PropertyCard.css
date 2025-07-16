@@ -1,64 +1,92 @@
-/* src/styles/PropertyCard.css */
 .property-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin: 16px 0;
-  padding: 16px;
   background-color: #fff;
-  transition: box-shadow 0.2s;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s ease;
 }
 
 .property-card:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-}
-
-.card-details {
-  margin-top: 12px;
-  font-size: 14px;
-  color: #333;
-}
 .property-image {
   width: 100%;
-  height: 160px;
+  height: 200px;
   object-fit: cover;
   border-radius: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-.property-snippet {
-  font-size: 0.9rem;
-  color: #666;
-}
-.paid {
-  border: 2px solid #4caf50;
-  box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
-}
-
-.unpaid {
-  border: 2px solid #ccc;
-  box-shadow: 0 0 10px rgba(204, 204, 204, 0.3);
-}
 .status-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  margin-bottom: 8px;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 
-.paid .status-badge {
-  background-color: #e8f5e9;
-  color: #4caf50;
+.status-badge.paid {
+  background-color: #e6f4ea;
+  color: #2e7d32;
 }
 
-.unpaid .status-badge {
+.status-badge.unpaid {
+  background-color: #fdecea;
+  color: #c62828;
+}
+
+.property-card h3 {
+  margin: 6px 0 4px;
+  font-size: 18px;
+}
+
+.property-card p {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #444;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+button.primary {
+  background-color: white;
+  color: black;
+  border: 1px solid #ccc;
+}
+
+button.primary:hover {
   background-color: #f0f0f0;
-  color: #9e9e9e;
+}
+
+button.delete {
+  background-color: white;
+  color: #c62828;
+  border: 1px solid #c62828;
+}
+
+button.delete:hover {
+  background-color: #fdecea;
+}
+
+button.details {
+  background-color: white;
+  color: black;
+  border: 1px solid #444;
+}
+
+button.details:hover {
+  background-color: #f0f0f0;
 }

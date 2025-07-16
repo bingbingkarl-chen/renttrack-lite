@@ -62,7 +62,9 @@ function AddPropertyForm({ onAdd }) {
         value={image}
         onChange={(e) => setImage(e.target.value)}
       />
-      <button type="submit">Add Property</button>
+      <button type="submit" className="primary">
+        Add Property
+      </button>
     </form>
   );
 }

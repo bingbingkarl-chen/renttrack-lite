@@ -35,27 +35,33 @@ function App() {
     setPropertyList(filteredList);
     localStorage.setItem("renttrack-data", JSON.stringify(filteredList));
   };
-
   return (
     <div className="app-container">
       <h1>RentTrack Lite</h1>
       <PaymentSummary propertyList={propertyList} />
+
       <Routes>
         <Route
           path="/"
           element={
             <>
               <AddPropertyForm onAdd={addProperty} />
-              {propertyList.map((property) => (
-                <PropertyCard
-                  key={property.id}
-                  property={property}
-                  onTogglePaid={togglePaidStatus}
-                  onDelete={handleDelete}
-                />
-              ))}
+              <div className="property-list">
+                {propertyList.map((property) => (
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                    onTogglePaid={togglePaidStatus}
+                    onDelete={handleDelete}
+                  />
+                ))}
+              </div>
             </>
           }
+        />
+        <Route
+          path="/property/:id"
+          element={<PropertyDetail propertyList={propertyList} />}
         />
       </Routes>
     </div>

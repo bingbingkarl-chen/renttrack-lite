@@ -1,7 +1,8 @@
 // src/components/PropertyCard.js
 import React from "react";
-import "../styles/PropertyCard.css";
 import { Link } from "react-router-dom";
+import "../styles/PropertyCard.css";
+
 const PropertyCard = ({ property, onTogglePaid, onDelete }) => {
   return (
     <div className={`property-card ${property.isPaid ? "paid" : "unpaid"}`}>
@@ -13,24 +14,27 @@ const PropertyCard = ({ property, onTogglePaid, onDelete }) => {
       <div className={`status-badge ${property.isPaid ? "paid" : "unpaid"}`}>
         {property.isPaid ? "Paid" : "Unpaid"}
       </div>
+
       <h3>{property.title}</h3>
       <p>{property.location}</p>
       <p>
         <strong>{property.rent}</strong>
       </p>
       <p>{property.isPaid ? "✅ Paid" : "❌ Not Paid"}</p>
-      <button onClick={() => onTogglePaid(property.id)}>
-        {property.isPaid ? "Mark as Unpaid" : "Mark as Paid"}
-      </button>
-      <button
-        onClick={() => onDelete(property.id)}
-        style={{ marginLeft: "10px", color: "red" }}
-      >
-        🗑️ Delete
-      </button>
-      <p className="property-snippet">
-        {property.description ? property.description.slice(0, 50) + "..." : ""}
-      </p>
+
+      <div className="action-buttons">
+        <button onClick={() => onTogglePaid(property.id)} className="primary">
+          {property.isPaid ? "Mark as Unpaid" : "Mark as Paid"}
+        </button>
+
+        <button onClick={() => onDelete(property.id)} className="delete">
+          🗑 Delete
+        </button>
+
+        <Link to={`/property/${property.id}`}>
+          <button className="details">View Details</button>
+        </Link>
+      </div>
     </div>
   );
 };

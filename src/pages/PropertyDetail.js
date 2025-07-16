@@ -1,12 +1,11 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import propertyData from "../data/propertyData";
 import "../styles/PropertyDetail.css";
 
-const PropertyDetail = () => {
+const PropertyDetail = ({ propertyList }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const property = propertyData.find((p) => p.id === Number(id));
+  const property = propertyList.find((item) => item.id === Number(id));
 
   if (!property) {
     return <div className="detail-container">Property not found.</div>;
@@ -20,20 +19,26 @@ const PropertyDetail = () => {
         alt={property.title}
         style={{ width: "100%", borderRadius: "8px" }}
       />
-      <p>Location: {property.location}</p>
-      <p>Rent: {property.rent}</p>
-      <p>Deposit: {property.deposit}</p>
       <p>
-        Status:{" "}
+        <strong>Location:</strong> {property.location}
+      </p>
+      <p>
+        <strong>Rent:</strong> €{property.rent}
+      </p>
+      <p>
+        <strong>Deposit:</strong> €{property.deposit}
+      </p>
+      <p>
+        <strong>Status:</strong>{" "}
         {property.isPaid ? (
           <span style={{ color: "green" }}>✅ Paid</span>
         ) : (
           <span style={{ color: "red" }}>❌ Unpaid</span>
         )}
       </p>
-      <span className="back-button" onClick={() => navigate(-1)}>
+      <button onClick={() => navigate(-1)} className="back-button">
         ← Back
-      </span>
+      </button>
     </div>
   );
 };
