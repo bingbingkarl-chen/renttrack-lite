@@ -1,0 +1,54 @@
+.edit-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 32px;
+  padding: 0 10px;
+}
+
+.edit-form input {
+  flex: 1 1 200px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+  color: black;
+  transition: border-color 0.2s ease;
+}
+
+.edit-form input:focus {
+  border-color: #000;
+  outline: none;
+}
+
+.edit-form button {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: white;
+  color: black;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.edit-form button:hover {
+  background-color: #f5f5f5;
+}
+
+.edit-form button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 表单错误提示样式 */
+.error-message {
+  color: red;
+  font-size: 14px;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}
