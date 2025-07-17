@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+
 import PropertyCard from "./components/PropertyCard";
 import propertyData from "./data/propertyData";
 import PropertyDetail from "./pages/PropertyDetail";
-import "./styles/App.css";
-import PaymentSummary from "./components/PaymentSummary";
 import AddPropertyForm from "./components/AddPropertyForm";
 import EditProperty from "./pages/EditProperty";
+import PaymentSummary from "./components/PaymentSummary";
+import SearchAndFilter from "./components/SearchAndFilter";
+
+import "./styles/App.css";
 
 function App() {
   const [propertyList, setPropertyList] = useState(() => {
@@ -17,6 +20,9 @@ function App() {
   useEffect(() => {
     localStorage.setItem("renttrack-data", JSON.stringify(propertyList));
   }, [propertyList]);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all"); // 'all' | 'paid' | 'unpaid'
 
   const togglePaidStatus = (id) => {
     setPropertyList((prevList) =>
@@ -31,6 +37,7 @@ function App() {
     setPropertyList(updatedList);
     localStorage.setItem("renttrack-data", JSON.stringify(updatedList));
   };
+
   const handleUpdate = (updatedProperty) => {
     const updatedList = propertyList.map((item) =>
       item.id === updatedProperty.id ? updatedProperty : item
@@ -44,26 +51,59 @@ function App() {
     setPropertyList(filteredList);
     localStorage.setItem("renttrack-data", JSON.stringify(filteredList));
   };
+
+  // 搜索和筛选过滤
+  const filteredList = propertyList.filter((item) => {
+    const title = item.title?.toLowerCase() || "";
+    const location = item.location?.toLowerCase() || "";
+
+    const matchesSearch =
+      title.includes(searchTerm.toLowerCase()) ||
+      location.includes(searchTerm.toLowerCase());
+
+    const matchesFilter =
+      filterStatus === "all" ||
+      (filterStatus === "paid" && item.isPaid) ||
+      (filterStatus === "unpaid" && !item.isPaid);
+
+    return matchesSearch && matchesFilter;
+  });
+
   return (
     <div className="app-container">
       <h1>RentTrack Lite</h1>
+
       <PaymentSummary propertyList={propertyList} />
+
       <Routes>
         <Route
           path="/"
           element={
             <>
               <AddPropertyForm onAdd={addProperty} />
+
+              {/* 搜索和筛选组件 */}
+              <SearchAndFilter
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                filterStatus={filterStatus}
+                setFilterStatus={setFilterStatus}
+              />
+
               <div className="property-list">
-                {propertyList.map((property) => (
-                  <PropertyCard
-                    key={property.id}
-                    property={property}
-                    onTogglePaid={togglePaidStatus}
-                    onDelete={handleDelete}
-                  />
-                ))}
-              </div>
+               {filteredList.length === 0 ? (
+              <p className="no-results">No properties found.</p >
+               ) : (
+              filteredList.map((property) => (
+              <PropertyCard
+               key={property.id}
+               property={property}
+               onTogglePaid={togglePaidStatus}
+               onDelete={handleDelete}
+      />
+    ))
+  )}
+</div>
             </>
           }
         />
@@ -73,7 +113,6 @@ function App() {
           element={<PropertyDetail propertyList={propertyList} />}
         />
 
-        {/* ✅ 修正后的编辑页路由 */}
         <Route
           path="/edit/:id"
           element={

@@ -1,0 +1,32 @@
+.search-filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 32px;
+  padding: 0 10px;
+}
+
+.search-filter-container input[type="text"],
+.search-filter-container select {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #fff;
+  color: #000;
+  min-width: 200px;
+  flex: 1 1 auto;
+  transition: border-color 0.2s ease;
+}
+
+.search-filter-container input[type="text"]:focus,
+.search-filter-container select:focus {
+  outline: none;
+  border-color: #333;
+}
+
+.search-filter-container label {
+  font-size: 14px;
+  color: #333;
+}
