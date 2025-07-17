@@ -14,6 +14,8 @@ const EditProperty = ({ propertyList, onUpdate }) => {
     image: "",
   });
 
+  const [error, setError] = useState("");
+
   useEffect(() => {
     if (property) {
       setFormData({
@@ -21,7 +23,7 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         location: property.location,
         rent: property.rent,
         deposit: property.deposit,
-        image: property.image,
+        image: property.image || "",
       });
     }
   }, [property]);
@@ -33,7 +35,27 @@ const EditProperty = ({ propertyList, onUpdate }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate(id, formData);
+
+    const { title, location, rent, deposit } = formData;
+
+    if (
+      !title?.trim() ||
+      !location?.trim() ||
+      !rent?.trim() ||
+      !deposit?.trim()
+    ) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
+    setError(""); // clear previous error
+
+    const updated = {
+      ...property,
+      ...formData,
+    };
+
+    onUpdate(id, updated);
     navigate("/");
   };
 
@@ -42,6 +64,9 @@ const EditProperty = ({ propertyList, onUpdate }) => {
   return (
     <form onSubmit={handleSubmit} className="edit-form">
       <h2>Edit Property</h2>
+
+      {error && <p className="error-message">{error}</p>}
+
       <input
         name="title"
         value={formData.title}
@@ -70,7 +95,7 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         name="image"
         value={formData.image}
         onChange={handleChange}
-        placeholder="Image URL"
+        placeholder="Image URL (optional)"
       />
       <button type="submit">Save</button>
     </form>

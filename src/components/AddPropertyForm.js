@@ -6,10 +6,16 @@ function AddPropertyForm({ onAdd }) {
   const [rent, setRent] = useState("");
   const [deposit, setDeposit] = useState("");
   const [image, setImage] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (!title.trim || !location || !rent || !deposit) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+    setError("");
     const newProperty = {
       id: Date.now(),
       title,
@@ -32,6 +38,8 @@ function AddPropertyForm({ onAdd }) {
 
   return (
     <form onSubmit={handleSubmit} className="add-property-form">
+      {error && <p className="error-message">{error}</p>}
+
       <input
         type="text"
         placeholder="Property Title"
@@ -62,9 +70,7 @@ function AddPropertyForm({ onAdd }) {
         value={image}
         onChange={(e) => setImage(e.target.value)}
       />
-      <button type="submit" className="primary">
-        Add Property
-      </button>
+      <button type="submit">Add Property</button>
     </form>
   );
 }
