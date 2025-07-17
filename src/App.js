@@ -6,6 +6,7 @@ import PropertyDetail from "./pages/PropertyDetail";
 import "./styles/App.css";
 import PaymentSummary from "./components/PaymentSummary";
 import AddPropertyForm from "./components/AddPropertyForm";
+import EditProperty from "./pages/EditProperty";
 
 function App() {
   const [propertyList, setPropertyList] = useState(() => {
@@ -30,6 +31,14 @@ function App() {
     setPropertyList(updatedList);
     localStorage.setItem("renttrack-data", JSON.stringify(updatedList));
   };
+  const handleUpdate = (updatedProperty) => {
+    const updatedList = propertyList.map((item) =>
+      item.id === updatedProperty.id ? updatedProperty : item
+    );
+    setPropertyList(updatedList);
+    localStorage.setItem("renttrack-data", JSON.stringify(updatedList));
+  };
+
   const handleDelete = (id) => {
     const filteredList = propertyList.filter((item) => item.id !== id);
     setPropertyList(filteredList);
@@ -39,7 +48,6 @@ function App() {
     <div className="app-container">
       <h1>RentTrack Lite</h1>
       <PaymentSummary propertyList={propertyList} />
-
       <Routes>
         <Route
           path="/"
@@ -59,9 +67,18 @@ function App() {
             </>
           }
         />
+
         <Route
           path="/property/:id"
           element={<PropertyDetail propertyList={propertyList} />}
+        />
+
+        {/* ✅ 修正后的编辑页路由 */}
+        <Route
+          path="/edit/:id"
+          element={
+            <EditProperty propertyList={propertyList} onUpdate={handleUpdate} />
+          }
         />
       </Routes>
     </div>

@@ -34,6 +34,9 @@ const PropertyCard = ({ property, onTogglePaid, onDelete }) => {
         <Link to={`/property/${property.id}`}>
           <button className="details">View Details</button>
         </Link>
+        <Link to={`/edit/${property.id}`}>
+          <button className="edit">✏️ Edit</button>
+        </Link>
       </div>
     </div>
   );
