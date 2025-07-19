@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import "../styles/EditProperty.css";
 
 const EditProperty = ({ propertyList, onUpdate }) => {
   const { id } = useParams();
@@ -7,11 +8,13 @@ const EditProperty = ({ propertyList, onUpdate }) => {
   const property = propertyList.find((item) => item.id === Number(id));
 
   const [formData, setFormData] = useState({
+    id: Number(id), // 🔧 注意保留 id
     title: "",
     location: "",
     rent: "",
     deposit: "",
     image: "",
+    isPaid: false,
   });
 
   const [error, setError] = useState("");
@@ -19,18 +22,23 @@ const EditProperty = ({ propertyList, onUpdate }) => {
   useEffect(() => {
     if (property) {
       setFormData({
+        id: property.id,
         title: property.title,
         location: property.location,
         rent: property.rent,
         deposit: property.deposit,
         image: property.image || "",
+        isPaid: property.isPaid || false,
       });
     }
   }, [property]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -38,65 +46,64 @@ const EditProperty = ({ propertyList, onUpdate }) => {
 
     const { title, location, rent, deposit } = formData;
 
-    if (
-      !title?.trim() ||
-      !location?.trim() ||
-      !rent?.trim() ||
-      !deposit?.trim()
-    ) {
+    if (!title.trim() || !location.trim() || !rent.trim() || !deposit.trim()) {
       setError("Please fill in all required fields.");
       return;
     }
 
-    setError(""); // clear previous error
-
-    const updated = {
-      ...property,
-      ...formData,
-    };
-
-    onUpdate(id, updated);
+    setError("");
+    onUpdate(formData); // ✅ 传入包含 id 的完整对象
     navigate("/");
   };
 
-  if (!property) return <div>Property not found</div>;
+  if (!property) return <div>Property not found.</div>;
 
   return (
-    <form onSubmit={handleSubmit} className="edit-form">
+    <form className="add-property-form" onSubmit={handleSubmit}>
       <h2>Edit Property</h2>
 
       {error && <p className="error-message">{error}</p>}
 
       <input
+        type="text"
         name="title"
+        placeholder="Title"
         value={formData.title}
         onChange={handleChange}
-        placeholder="Title"
       />
+
       <input
+        type="text"
         name="location"
+        placeholder="Location"
         value={formData.location}
         onChange={handleChange}
-        placeholder="Location"
       />
+
       <input
+        type="text"
         name="rent"
+        placeholder="Rent"
         value={formData.rent}
         onChange={handleChange}
-        placeholder="Rent"
       />
+
       <input
+        type="text"
         name="deposit"
+        placeholder="Deposit"
         value={formData.deposit}
         onChange={handleChange}
-        placeholder="Deposit"
       />
+
       <input
+        type="text"
         name="image"
+        placeholder="Image URL (optional)"
         value={formData.image}
         onChange={handleChange}
-        placeholder="Image URL (optional)"
       />
+
       <button type="submit">Save</button>
     </form>
   );

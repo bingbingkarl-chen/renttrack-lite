@@ -17,6 +17,26 @@ const PropertyCard = ({ property, onTogglePaid, onDelete }) => {
 
       <h3>{property.title}</h3>
       <p>{property.location}</p>
+      {/* Tenant information */}
+      {property.tenant ? (
+        <div
+          className="tenant-info"
+          style={{
+            background: "#f7f7f7",
+            padding: "8px",
+            borderRadius: "4px",
+            margin: "8px 0",
+          }}
+        >
+          <div>Tenant: {property.tenant.name}</div>
+          <div>Move-in Date: {property.tenant.moveInDate}</div>
+        </div>
+      ) : (
+        <div className="tenant-info" style={{ color: "#999", margin: "8px 0" }}>
+          No tenant
+        </div>
+      )}
+
       <p>
         <strong>{property.rent}</strong>
       </p>
