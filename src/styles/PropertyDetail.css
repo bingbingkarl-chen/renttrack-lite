@@ -24,3 +24,9 @@
   text-decoration: underline;
   cursor: pointer;
 }
+.rent-records .paid {
+  background: #d2ffd2;
+}
+.rent-records .unpaid {
+  background: #ffdede;
+}

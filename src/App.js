@@ -51,8 +51,17 @@ function App() {
     setPropertyList(filteredList);
     localStorage.setItem("renttrack-data", JSON.stringify(filteredList));
   };
-
-  // 搜索和筛选过滤
+  const handleToggleRentRecord = (propertyId, monthIdx) => {
+    setPropertyList((prevList) =>
+      prevList.map((prop) => {
+        if (prop.id !== propertyId) return prop;
+        const updatedRecords = prop.rentRecords.map((rec, idx) =>
+          idx === monthIdx ? { ...rec, paid: !rec.paid } : rec
+        );
+        return { ...prop, rentRecords: updatedRecords };
+      })
+    );
+  };
   const filteredList = propertyList.filter((item) => {
     const title = item.title?.toLowerCase() || "";
     const location = item.location?.toLowerCase() || "";
@@ -91,28 +100,32 @@ function App() {
               />
 
               <div className="property-list">
-               {filteredList.length === 0 ? (
-              <p className="no-results">No properties found.</p >
-               ) : (
-              filteredList.map((property) => (
-              <PropertyCard
-               key={property.id}
-               property={property}
-               onTogglePaid={togglePaidStatus}
-               onDelete={handleDelete}
-      />
-    ))
-  )}
-</div>
+                {filteredList.length === 0 ? (
+                  <p className="no-results">No properties found.</p>
+                ) : (
+                  filteredList.map((property) => (
+                    <PropertyCard
+                      key={property.id}
+                      property={property}
+                      onTogglePaid={togglePaidStatus}
+                      onDelete={handleDelete}
+                    />
+                  ))
+                )}
+              </div>
             </>
           }
         />
 
         <Route
           path="/property/:id"
-          element={<PropertyDetail propertyList={propertyList} />}
+          element={
+            <PropertyDetail
+              propertyList={propertyList}
+              onToggleRentRecord={handleToggleRentRecord}
+            />
+          }
         />
-
         <Route
           path="/edit/:id"
           element={

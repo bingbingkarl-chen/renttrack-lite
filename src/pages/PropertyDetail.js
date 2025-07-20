@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/PropertyDetail.css";
 
-const PropertyDetail = ({ propertyList }) => {
+const PropertyDetail = ({ propertyList, onToggleRentRecord }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const property = propertyList.find((item) => item.id === Number(id));
@@ -36,6 +36,26 @@ const PropertyDetail = ({ propertyList }) => {
           <span style={{ color: "red" }}>❌ Unpaid</span>
         )}
       </p>
+      <div className="rent-records">
+        <h4>Rent Records</h4>
+        <div className="rent-record-list">
+          {property.rentRecords?.map((rec, idx) => (
+            <button
+              key={rec.month}
+              className={rec.paid ? "paid" : "unpaid"}
+              onClick={() => onToggleRentRecord(property.id, idx)}
+              style={{
+                margin: "2px 4px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+                background: rec.paid ? "#d2ffd2" : "#ffdede",
+              }}
+            >
+              {rec.month} {rec.paid ? "✅" : "❌"}
+            </button>
+          ))}
+        </div>
+      </div>
       <button onClick={() => navigate(-1)} className="back-button">
         ← Back
       </button>
