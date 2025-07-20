@@ -3,8 +3,9 @@ const properties = [
     id: 1,
     title: "Modern Apartment in Berlin",
     location: "Berlin, Germany",
-    rent: "€1,200",
-    deposit: "€2,400",
+    rent: "1,200",
+    deposit: "2,400",
+    currency: "EUR", // 或 "CNY"
     isPaid: true, // ✅
     image:
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&h=300&q=80",
@@ -33,8 +34,9 @@ const properties = [
     id: 2,
     title: "Cozy Flat in Guangxi",
     location: "Qinzhou, China",
-    rent: "¥2,800",
-    deposit: "¥5,600",
+    rent: "2,800",
+    deposit: "5,600",
+    currency: "EUR", // 或 "CNY"
     isPaid: false, // ❌
     image:
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",

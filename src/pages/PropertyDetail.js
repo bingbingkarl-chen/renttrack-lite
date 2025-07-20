@@ -1,7 +1,11 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/PropertyDetail.css";
-
+const getCurrencySymbol = (currency) => {
+  if (currency === "EUR") return "€";
+  if (currency === "CNY") return "¥";
+  return "";
+};
 const PropertyDetail = ({ propertyList, onToggleRentRecord }) => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -23,10 +27,14 @@ const PropertyDetail = ({ propertyList, onToggleRentRecord }) => {
         <strong>Location:</strong> {property.location}
       </p>
       <p>
-        <strong>Rent:</strong> €{property.rent}
+        <p>
+          <strong>Rent:</strong> {property.currency === "EUR" ? "€" : "¥"}
+          {property.rent}
+        </p>
       </p>
       <p>
-        <strong>Deposit:</strong> €{property.deposit}
+        <strong>Deposit:</strong> {property.currency === "EUR" ? "€" : "¥"}
+        {property.deposit}
       </p>
       <p>
         <strong>Status:</strong>{" "}

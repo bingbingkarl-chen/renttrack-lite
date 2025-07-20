@@ -17,6 +17,7 @@ const EditProperty = ({ propertyList, onUpdate }) => {
     isPaid: false,
     tenantName: "",
     moveInDate: "",
+    currency: "EUR",
   });
 
   const [error, setError] = useState("");
@@ -33,6 +34,7 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         isPaid: property.isPaid || false,
         tenantName: property.tenant?.name || "",
         moveInDate: property.tenant?.moveInDate || "",
+        currency: property.currency || "EUR",
       });
     }
   }, [property]);
@@ -57,9 +59,15 @@ const EditProperty = ({ propertyList, onUpdate }) => {
       isPaid,
       tenantName,
       moveInDate,
+      currency,
     } = formData;
 
-    if (!title.trim() || !location.trim() || !rent.trim() || !deposit.trim()) {
+    if (
+      !title.trim() ||
+      !location.trim() ||
+      !rent.toString().trim() ||
+      !deposit.toString().trim()
+    ) {
       setError("Please fill in all required fields.");
       return;
     }
@@ -77,7 +85,10 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         name: tenantName,
         moveInDate: moveInDate,
       },
+      rentRecords: property.rentRecords || [],
+      currency,
     };
+
     onUpdate(submitData);
     navigate("/");
   };
@@ -106,7 +117,7 @@ const EditProperty = ({ propertyList, onUpdate }) => {
       />
 
       <input
-        type="text"
+        type="number"
         name="rent"
         placeholder="Rent"
         value={formData.rent}
@@ -114,12 +125,23 @@ const EditProperty = ({ propertyList, onUpdate }) => {
       />
 
       <input
-        type="text"
+        type="number"
         name="deposit"
         placeholder="Deposit"
         value={formData.deposit}
         onChange={handleChange}
       />
+      <label>
+        Currency:&nbsp;
+        <select
+          name="currency"
+          value={formData.currency}
+          onChange={handleChange}
+        >
+          <option value="EUR">€</option>
+          <option value="CNY">¥</option>
+        </select>
+      </label>
 
       <input
         type="text"

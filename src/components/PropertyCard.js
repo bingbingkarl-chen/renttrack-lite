@@ -2,6 +2,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/PropertyCard.css";
+const getCurrencySymbol = (currency) => {
+  if (currency === "EUR") return "€";
+  if (currency === "CNY") return "¥";
+  return "";
+};
 
 const PropertyCard = ({ property, onTogglePaid, onDelete }) => {
   return (
@@ -38,9 +43,14 @@ const PropertyCard = ({ property, onTogglePaid, onDelete }) => {
       )}
 
       <p>
-        <strong>{property.rent}</strong>
+        <strong>Rent:</strong> {getCurrencySymbol(property.currency)}
+        {property.rent}
       </p>
       <p>{property.isPaid ? "✅ Paid" : "❌ Not Paid"}</p>
+      <p>
+        <strong>Deposit:</strong> {getCurrencySymbol(property.currency)}
+        {property.deposit}
+      </p>
 
       <div className="action-buttons">
         <button onClick={() => onTogglePaid(property.id)} className="primary">
