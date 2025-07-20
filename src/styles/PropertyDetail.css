@@ -24,9 +24,27 @@
   text-decoration: underline;
   cursor: pointer;
 }
-.rent-records .paid {
-  background: #d2ffd2;
+.rent-records-table table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 4px;
+  margin-top: 12px;
 }
-.rent-records .unpaid {
-  background: #ffdede;
+
+.rent-records-table th,
+.rent-records-table td {
+  padding: 6px 0;
+  min-width: 38px;
+  font-size: 1rem;
+  border: none;
+}
+
+.rent-records-table td {
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+
+.rent-records-table td:hover {
+  box-shadow: 0 0 6px #aaa;
+  opacity: 0.9;
 }
