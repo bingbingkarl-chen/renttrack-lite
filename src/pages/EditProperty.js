@@ -8,13 +8,15 @@ const EditProperty = ({ propertyList, onUpdate }) => {
   const property = propertyList.find((item) => item.id === Number(id));
 
   const [formData, setFormData] = useState({
-    id: Number(id), // 🔧 注意保留 id
+    id: Number(id),
     title: "",
     location: "",
     rent: "",
     deposit: "",
     image: "",
     isPaid: false,
+    tenantName: "",
+    moveInDate: "",
   });
 
   const [error, setError] = useState("");
@@ -29,6 +31,8 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         deposit: property.deposit,
         image: property.image || "",
         isPaid: property.isPaid || false,
+        tenantName: property.tenant?.name || "",
+        moveInDate: property.tenant?.moveInDate || "",
       });
     }
   }, [property]);
@@ -44,7 +48,16 @@ const EditProperty = ({ propertyList, onUpdate }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { title, location, rent, deposit } = formData;
+    const {
+      title,
+      location,
+      rent,
+      deposit,
+      image,
+      isPaid,
+      tenantName,
+      moveInDate,
+    } = formData;
 
     if (!title.trim() || !location.trim() || !rent.trim() || !deposit.trim()) {
       setError("Please fill in all required fields.");
@@ -52,10 +65,22 @@ const EditProperty = ({ propertyList, onUpdate }) => {
     }
 
     setError("");
-    onUpdate(formData); // ✅ 传入包含 id 的完整对象
+    const submitData = {
+      id: property.id,
+      title,
+      location,
+      rent,
+      deposit,
+      image: image || "",
+      isPaid: isPaid || false,
+      tenant: {
+        name: tenantName,
+        moveInDate: moveInDate,
+      },
+    };
+    onUpdate(submitData);
     navigate("/");
   };
-
   if (!property) return <div>Property not found.</div>;
 
   return (
@@ -101,6 +126,20 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         name="image"
         placeholder="Image URL (optional)"
         value={formData.image}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="tenantName"
+        placeholder="Tenant Name"
+        value={formData.tenantName}
+        onChange={handleChange}
+      />
+      <input
+        type="date"
+        name="moveInDate"
+        placeholder="Move-in Date"
+        value={formData.moveInDate}
         onChange={handleChange}
       />
 
