@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/AddPropertyForm.css";
 
 function AddPropertyForm({ onAdd }) {
@@ -8,8 +8,26 @@ function AddPropertyForm({ onAdd }) {
   const [deposit, setDeposit] = useState("");
   const [image, setImage] = useState("");
 
+  // 新增：贷款相关字段
+  const [loanAmount, setLoanAmount] = useState("");
+  const [loanMonths, setLoanMonths] = useState("");
+  const [monthlyPayment, setMonthlyPayment] = useState("");
+
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 自动计算月供
+  useEffect(() => {
+    if (
+      loanAmount &&
+      loanMonths &&
+      !isNaN(loanAmount) &&
+      !isNaN(loanMonths) &&
+      Number(loanMonths) !== 0
+    ) {
+      setMonthlyPayment((Number(loanAmount) / Number(loanMonths)).toFixed(2));
+    }
+  }, [loanAmount, loanMonths]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,25 +48,33 @@ function AddPropertyForm({ onAdd }) {
       deposit,
       isPaid: false,
       image,
+      loan: {
+        amount: Number(loanAmount) || 0,
+        months: Number(loanMonths) || 0,
+        monthlyPayment: Number(monthlyPayment) || 0,
+      },
+      // 其它字段如 currency、tenant、rentRecords 可以后续加入
     };
 
-    // 模拟异步保存
     setTimeout(() => {
       onAdd(newProperty);
 
-      // 清空表单
       setTitle("");
       setLocation("");
       setRent("");
       setDeposit("");
       setImage("");
+      setLoanAmount("");
+      setLoanMonths("");
+      setMonthlyPayment("");
       setIsSubmitting(false);
-    }, 500); // 半秒假装在提交
+    }, 500);
   };
 
   return (
     <form onSubmit={handleSubmit} className="add-property-form">
       {error && <p className="error-message">{error}</p>}
+
       <input
         type="text"
         placeholder="Property Title"
@@ -62,26 +88,51 @@ function AddPropertyForm({ onAdd }) {
         onChange={(e) => setLocation(e.target.value)}
       />
       <input
-        type="text"
+        type="number"
         placeholder="Rent"
         value={rent}
         onChange={(e) => setRent(e.target.value)}
       />
       <input
-        type="text"
+        type="number"
         placeholder="Deposit"
         value={deposit}
         onChange={(e) => setDeposit(e.target.value)}
       />
       <input
         type="text"
-        placeholder="Image URL (optional)"
+        placeholder="Image URL"
         value={image}
         onChange={(e) => setImage(e.target.value)}
       />
 
-      <button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Submitting..." : "Add Property"}
+      {/* 贷款信息 */}
+      <h3>Loan Info</h3>
+      <input
+        type="number"
+        name="loanAmount"
+        placeholder="Loan Amount"
+        value={loanAmount}
+        onChange={(e) => setLoanAmount(e.target.value)}
+      />
+      <input
+        type="number"
+        name="loanMonths"
+        placeholder="Months"
+        value={loanMonths}
+        onChange={(e) => setLoanMonths(e.target.value)}
+      />
+      <input
+        type="number"
+        name="monthlyPayment"
+        placeholder="Monthly Payment"
+        value={monthlyPayment}
+        onChange={(e) => setMonthlyPayment(e.target.value)}
+        readOnly //
+      />
+
+      <button type="submit" className="primary" disabled={isSubmitting}>
+        {isSubmitting ? "Saving..." : "Add Property"}
       </button>
     </form>
   );
