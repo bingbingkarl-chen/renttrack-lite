@@ -51,6 +51,19 @@ const PropertyCard = ({ property, onTogglePaid, onDelete }) => {
         <strong>Deposit:</strong> {getCurrencySymbol(property.currency)}
         {property.deposit}
       </p>
+      {property.loan && (
+        <div className="loan-info">
+          <span>
+            Loan: {getCurrencySymbol(property.currency)}
+            {property.loan.amount} / {property.loan.months}mo
+          </span>
+          <br />
+          <span>
+            Monthly: {getCurrencySymbol(property.currency)}
+            {property.loan.monthlyPayment}
+          </span>
+        </div>
+      )}
 
       <div className="action-buttons">
         <button onClick={() => onTogglePaid(property.id)} className="primary">

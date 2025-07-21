@@ -6,6 +6,12 @@ const properties = [
     rent: "1,200",
     deposit: "2,400",
     currency: "EUR", // 或 "CNY"
+    loan: {
+      amount: 50000, // 总贷款额
+      months: 120, // 还款月数
+      monthlyPayment: 420, // 月供金额
+    },
+
     isPaid: true, // ✅
     image:
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&h=300&q=80",
@@ -13,6 +19,7 @@ const properties = [
       name: "John",
       moveInDate: "2024-03-15",
     },
+
     description:
       "A modern, bright apartment in the heart of Berlin. Close to public transport and shopping.",
     rentRecords: [
@@ -37,6 +44,11 @@ const properties = [
     rent: "2,800",
     deposit: "5,600",
     currency: "EUR", // 或 "CNY"
+    loan: {
+      amount: 50000, // 总贷款额
+      months: 120, // 还款月数
+      monthlyPayment: 420, // 月供金额
+    },
     isPaid: false, // ❌
     image:
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
@@ -44,6 +56,7 @@ const properties = [
       name: "John",
       moveInDate: "2024-03-15",
     },
+
     description:
       "A cozy flat with a beautiful view of the city. Perfect for students or young professionals.",
     rentRecords: [
