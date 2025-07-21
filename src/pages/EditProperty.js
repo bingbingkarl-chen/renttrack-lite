@@ -18,10 +18,14 @@ const EditProperty = ({ propertyList, onUpdate }) => {
     tenantName: "",
     moveInDate: "",
     currency: "EUR",
+    loanAmount: "",
+    loanMonths: "",
+    monthlyPayment: "",
   });
 
   const [error, setError] = useState("");
 
+  // 1. 数据回显 property 到 formData
   useEffect(() => {
     if (property) {
       setFormData({
@@ -35,9 +39,30 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         tenantName: property.tenant?.name || "",
         moveInDate: property.tenant?.moveInDate || "",
         currency: property.currency || "EUR",
+        loanAmount: property.loan?.amount || "",
+        loanMonths: property.loan?.months || "",
+        monthlyPayment: property.loan?.monthlyPayment || "",
       });
     }
   }, [property]);
+
+  // 2. 自动计算月供
+  useEffect(() => {
+    if (
+      formData.loanAmount &&
+      formData.loanMonths &&
+      !isNaN(formData.loanAmount) &&
+      !isNaN(formData.loanMonths) &&
+      Number(formData.loanMonths) !== 0
+    ) {
+      setFormData((prev) => ({
+        ...prev,
+        monthlyPayment: (
+          Number(prev.loanAmount) / Number(prev.loanMonths)
+        ).toFixed(2),
+      }));
+    }
+  }, [formData.loanAmount, formData.loanMonths]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,14 +85,12 @@ const EditProperty = ({ propertyList, onUpdate }) => {
       tenantName,
       moveInDate,
       currency,
+      loanAmount,
+      loanMonths,
+      monthlyPayment,
     } = formData;
 
-    if (
-      !title.trim() ||
-      !location.trim() ||
-      !rent.toString().trim() ||
-      !deposit.toString().trim()
-    ) {
+    if (!title.trim() || !location.trim() || !rent.trim() || !deposit.trim()) {
       setError("Please fill in all required fields.");
       return;
     }
@@ -81,23 +104,28 @@ const EditProperty = ({ propertyList, onUpdate }) => {
       deposit,
       image: image || "",
       isPaid: isPaid || false,
+      currency,
       tenant: {
         name: tenantName,
         moveInDate: moveInDate,
       },
+      loan: {
+        amount: Number(loanAmount) || 0,
+        months: Number(loanMonths) || 0,
+        monthlyPayment: Number(monthlyPayment) || 0,
+      },
       rentRecords: property.rentRecords || [],
-      currency,
     };
 
     onUpdate(submitData);
     navigate("/");
   };
+
   if (!property) return <div>Property not found.</div>;
 
   return (
     <form className="add-property-form" onSubmit={handleSubmit}>
       <h2>Edit Property</h2>
-
       {error && <p className="error-message">{error}</p>}
 
       <input
@@ -131,25 +159,21 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         value={formData.deposit}
         onChange={handleChange}
       />
-      <label>
-        Currency:&nbsp;
-        <select
-          name="currency"
-          value={formData.currency}
-          onChange={handleChange}
-        >
-          <option value="EUR">€</option>
-          <option value="CNY">¥</option>
-        </select>
-      </label>
 
       <input
         type="text"
         name="image"
-        placeholder="Image URL (optional)"
+        placeholder="Image URL"
         value={formData.image}
         onChange={handleChange}
       />
+
+      <select name="currency" value={formData.currency} onChange={handleChange}>
+        <option value="EUR">€</option>
+        <option value="CNY">¥</option>
+      </select>
+
+      {/* 租客信息 */}
       <input
         type="text"
         name="tenantName"
@@ -157,6 +181,7 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         value={formData.tenantName}
         onChange={handleChange}
       />
+
       <input
         type="date"
         name="moveInDate"
@@ -165,7 +190,33 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         onChange={handleChange}
       />
 
-      <button type="submit">Save</button>
+      {/* 贷款信息 */}
+      <h3>Loan Info</h3>
+      <input
+        type="number"
+        name="loanAmount"
+        placeholder="Loan Amount"
+        value={formData.loanAmount}
+        onChange={handleChange}
+      />
+      <input
+        type="number"
+        name="loanMonths"
+        placeholder="Months"
+        value={formData.loanMonths}
+        onChange={handleChange}
+      />
+      <input
+        type="number"
+        name="monthlyPayment"
+        placeholder="Monthly Payment"
+        value={formData.monthlyPayment}
+        onChange={handleChange}
+      />
+
+      <button type="submit" className="primary">
+        Save
+      </button>
     </form>
   );
 };
