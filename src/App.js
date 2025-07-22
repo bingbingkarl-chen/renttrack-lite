@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-
 import PropertyCard from "./components/PropertyCard";
 import propertyData from "./data/propertyData";
 import PropertyDetail from "./pages/PropertyDetail";
@@ -8,15 +7,18 @@ import AddPropertyForm from "./components/AddPropertyForm";
 import EditProperty from "./pages/EditProperty";
 import PaymentSummary from "./components/PaymentSummary";
 import SearchAndFilter from "./components/SearchAndFilter";
+import Transactions from "./pages/Transactions";
+import BalanceSheet from "./pages/BalanceSheet";
 
 import "./styles/App.css";
 
 function App() {
   const [propertyList, setPropertyList] = useState(() => {
     const savedData = localStorage.getItem("renttrack-data");
+
     return savedData ? JSON.parse(savedData) : propertyData;
   });
-
+  const [transactions, setTransactions] = useState([]);
   useEffect(() => {
     localStorage.setItem("renttrack-data", JSON.stringify(propertyList));
   }, [propertyList]);
@@ -131,6 +133,15 @@ function App() {
           element={
             <EditProperty propertyList={propertyList} onUpdate={handleUpdate} />
           }
+        />
+        <Route
+          path="/transactions"
+          element={<Transactions propertyList={propertyList} />}
+        />
+
+        <Route
+          path="/balancesheet"
+          element={<BalanceSheet transactions={transactions} />}
         />
       </Routes>
     </div>
