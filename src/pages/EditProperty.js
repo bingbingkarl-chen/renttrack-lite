@@ -17,6 +17,7 @@ const EditProperty = ({ propertyList, onUpdate }) => {
     isPaid: false,
     tenantName: "",
     moveInDate: "",
+    moveOutDate: "",
     currency: "EUR",
     loanAmount: "",
     loanMonths: "",
@@ -44,6 +45,7 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         isPaid: property.isPaid || false,
         tenantName: property.tenant?.name || "",
         moveInDate: property.tenant?.moveInDate || "",
+        moveOutDate: property.tenant?.moveOutDate || "",
         currency: property.currency || "EUR",
         loanAmount: property.loan?.amount || "",
         loanMonths: property.loan?.months || "",
@@ -131,8 +133,10 @@ const EditProperty = ({ propertyList, onUpdate }) => {
       currency,
       tenant: {
         name: tenantName,
-        moveInDate: moveInDate,
+        moveInDate: formData.moveInDate,
+        moveOutDate: formData.moveOutDate,
       },
+      tenantHistory: formData.tenantHistory || property.tenantHistory || [],
       loan: {
         amount: Number(loanAmount) || 0,
         months: Number(loanMonths) || 0,
@@ -154,6 +158,34 @@ const EditProperty = ({ propertyList, onUpdate }) => {
 
   if (!property) return <div>Property not found.</div>;
 
+  const handleChangeTenant = () => {
+    // 先校验当前租客信息
+    if (!formData.tenantName || !formData.moveInDate) {
+      setError(
+        "Please enter tenant name and move-in date before changing tenant."
+      );
+      return;
+    }
+
+    // 新的租客历史
+    const newHistory = [
+      ...(property.tenantHistory || []),
+      {
+        name: formData.tenantName,
+        moveInDate: formData.moveInDate,
+        moveOutDate: formData.moveOutDate || "", // 允许为空
+      },
+    ];
+
+    // 清空租客输入框，准备录入新租客
+    setFormData((prev) => ({
+      ...prev,
+      tenantName: "",
+      moveInDate: "",
+      moveOutDate: "",
+      tenantHistory: newHistory,
+    }));
+  };
   return (
     <form className="add-property-form" onSubmit={handleSubmit}>
       <h2>Edit Property</h2>
@@ -282,7 +314,19 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         value={formData.moveInDate}
         onChange={handleChange}
       />
-
+      <input
+        type="date"
+        name="moveOutDate"
+        value={formData.moveOutDate}
+        onChange={handleChange}
+      />
+      <button
+        type="button"
+        onClick={handleChangeTenant}
+        style={{ margin: "8px 0", background: "#eee" }}
+      >
+        Change Tenant
+      </button>
       <button type="submit" className="primary">
         Save
       </button>

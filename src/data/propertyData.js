@@ -26,7 +26,14 @@ const properties = [
       name: "John",
       moveInDate: "2024-03-15",
     },
-
+    tenantHistory: [
+      // 以后可以存多个租客对象
+      // {
+      //   name: "xxx",
+      //   moveInDate: "yyyy-mm-dd",
+      //   moveOutDate: "yyyy-mm-dd"
+      // }
+    ],
     description:
       "A modern, bright apartment in the heart of Berlin. Close to public transport and shopping.",
     rentRecords: [

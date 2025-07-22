@@ -2,6 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/PropertyDetail.css";
 
+// 币种符号工具
 const getCurrencySymbol = (currency) => {
   if (currency === "EUR") return "€";
   if (currency === "CNY") return "¥";
@@ -25,6 +26,7 @@ const PropertyDetail = ({ propertyList, onToggleRentRecord }) => {
         alt={property.title}
         style={{ width: "100%", borderRadius: "8px" }}
       />
+
       <p>
         <strong>Location:</strong> {property.location}
       </p>
@@ -36,6 +38,8 @@ const PropertyDetail = ({ propertyList, onToggleRentRecord }) => {
         <strong>Deposit:</strong> {getCurrencySymbol(property.currency)}
         {property.deposit}
       </p>
+
+      {/* 押金记录 */}
       {property.depositRecord && (
         <div className="deposit-record">
           <strong>Deposit Record:</strong>
@@ -48,57 +52,88 @@ const PropertyDetail = ({ propertyList, onToggleRentRecord }) => {
           )}
         </div>
       )}
-      {property.loan && (
-        <div className="loan-info">
-          <strong>Loan:</strong> {getCurrencySymbol(property.currency)}
-          {property.loan.amount}
+
+      {/* 租客信息 */}
+      {property.tenant && property.tenant.name && (
+        <div className="tenant-info">
+          <strong>Tenant:</strong> {property.tenant.name}
           <br />
-          <strong>Months:</strong> {property.loan.months}
-          <br />
-          <strong>Monthly Payment:</strong>{" "}
-          {getCurrencySymbol(property.currency)}
-          {property.loan.monthlyPayment}
+          <strong>Move-in Date:</strong> {property.tenant.moveInDate}
+          {property.tenant.moveOutDate && (
+            <>
+              <br />
+              <strong>Move-out Date:</strong> {property.tenant.moveOutDate}
+            </>
+          )}
         </div>
       )}
-      <p>
-        <strong>Status:</strong>{" "}
-        {property.isPaid ? (
-          <span style={{ color: "green" }}>✅ Paid</span>
-        ) : (
-          <span style={{ color: "red" }}>❌ Unpaid</span>
-        )}
-      </p>
 
-      <div className="rent-records-table">
-        <table>
-          <thead>
-            <tr>
-              {property.rentRecords?.map((rec) => (
-                <th key={rec.month}>{rec.month}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              {property.rentRecords?.map((rec, idx) => (
-                <td
-                  key={rec.month}
-                  style={{
-                    background: rec.paid ? "#d2ffd2" : "#ffdede",
-                    cursor: "pointer",
-                    textAlign: "center",
-                    fontWeight: "bold",
-                    borderRadius: 4,
-                  }}
-                  onClick={() => onToggleRentRecord(property.id, idx)}
-                >
-                  {rec.paid ? "✅" : "❌"}
-                </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      {/* 租客历史 */}
+      {property.tenantHistory && property.tenantHistory.length > 0 && (
+        <div className="tenant-history">
+          <h3>Tenant History</h3>
+          <ul>
+            {property.tenantHistory.map((t, idx) => (
+              <li key={idx}>
+                {t.name} | {t.moveInDate} → {t.moveOutDate || "Now"}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* 贷款信息 */}
+      {property.loan && (
+        <div className="loan-info">
+          <strong>Loan Info:</strong>
+          <div>
+            Total: {getCurrencySymbol(property.currency)}
+            {property.loan.amount}
+          </div>
+          <div>Months: {property.loan.months}</div>
+          <div>
+            Monthly Payment: {getCurrencySymbol(property.currency)}
+            {property.loan.monthlyPayment}
+          </div>
+        </div>
+      )}
+
+      {/* 收租记录表格 */}
+      {property.rentRecords && property.rentRecords.length > 0 && (
+        <div className="rent-records-table">
+          <h4>Rent Records</h4>
+          <table>
+            <thead>
+              <tr>
+                {property.rentRecords.map((rec) => (
+                  <th key={rec.month}>{rec.month}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {property.rentRecords.map((rec, idx) => (
+                  <td
+                    key={rec.month}
+                    style={{
+                      background: rec.paid ? "#d2ffd2" : "#ffdede",
+                      cursor: "pointer",
+                      textAlign: "center",
+                      fontWeight: "bold",
+                      borderRadius: 4,
+                    }}
+                    onClick={() =>
+                      onToggleRentRecord && onToggleRentRecord(property.id, idx)
+                    }
+                  >
+                    {rec.paid ? "✅" : "❌"}
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <button onClick={() => navigate(-1)} className="back-button">
         ← Back
