@@ -11,6 +11,13 @@ const properties = [
       months: 120, // 还款月数
       monthlyPayment: 420, // 月供金额
     },
+    depositRecord: {
+      paid: true, // 是否已缴纳
+      paidDate: "2024-01-20", // 缴纳时间
+      refunded: false, // 是否已退还
+      refundDate: "", // 退还时间（如果已退还则填日期）
+      notes: "", // 备注
+    },
 
     isPaid: true, // ✅
     image:
@@ -48,6 +55,13 @@ const properties = [
       amount: 50000, // 总贷款额
       months: 120, // 还款月数
       monthlyPayment: 420, // 月供金额
+    },
+    depositRecord: {
+      paid: true, // 是否已缴纳
+      paidDate: "2024-01-20", // 缴纳时间
+      refunded: false, // 是否已退还
+      refundDate: "", // 退还时间（如果已退还则填日期）
+      notes: "", // 备注
     },
     isPaid: false, // ❌
     image:

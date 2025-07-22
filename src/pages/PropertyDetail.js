@@ -36,6 +36,18 @@ const PropertyDetail = ({ propertyList, onToggleRentRecord }) => {
         <strong>Deposit:</strong> {getCurrencySymbol(property.currency)}
         {property.deposit}
       </p>
+      {property.depositRecord && (
+        <div className="deposit-record">
+          <strong>Deposit Record:</strong>
+          <div>Paid: {property.depositRecord.paid ? "Yes" : "No"}</div>
+          <div>Paid Date: {property.depositRecord.paidDate || "--"}</div>
+          <div>Refunded: {property.depositRecord.refunded ? "Yes" : "No"}</div>
+          <div>Refund Date: {property.depositRecord.refundDate || "--"}</div>
+          {property.depositRecord.notes && (
+            <div>Notes: {property.depositRecord.notes}</div>
+          )}
+        </div>
+      )}
       {property.loan && (
         <div className="loan-info">
           <strong>Loan:</strong> {getCurrencySymbol(property.currency)}

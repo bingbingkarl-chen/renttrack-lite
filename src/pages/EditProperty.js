@@ -21,11 +21,17 @@ const EditProperty = ({ propertyList, onUpdate }) => {
     loanAmount: "",
     loanMonths: "",
     monthlyPayment: "",
+    // 押金记录相关
+    depositPaid: "true",
+    depositPaidDate: "",
+    depositRefunded: "false",
+    depositRefundDate: "",
+    depositNotes: "",
   });
 
   const [error, setError] = useState("");
 
-  // 1. 数据回显 property 到 formData
+  // 数据回显 property 到 formData
   useEffect(() => {
     if (property) {
       setFormData({
@@ -42,11 +48,24 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         loanAmount: property.loan?.amount || "",
         loanMonths: property.loan?.months || "",
         monthlyPayment: property.loan?.monthlyPayment || "",
+        depositPaid: property.depositRecord
+          ? property.depositRecord.paid
+            ? "true"
+            : "false"
+          : "true",
+        depositPaidDate: property.depositRecord?.paidDate || "",
+        depositRefunded: property.depositRecord
+          ? property.depositRecord.refunded
+            ? "true"
+            : "false"
+          : "false",
+        depositRefundDate: property.depositRecord?.refundDate || "",
+        depositNotes: property.depositRecord?.notes || "",
       });
     }
   }, [property]);
 
-  // 2. 自动计算月供
+  // 自动计算月供
   useEffect(() => {
     if (
       formData.loanAmount &&
@@ -88,6 +107,11 @@ const EditProperty = ({ propertyList, onUpdate }) => {
       loanAmount,
       loanMonths,
       monthlyPayment,
+      depositPaid,
+      depositPaidDate,
+      depositRefunded,
+      depositRefundDate,
+      depositNotes,
     } = formData;
 
     if (!title.trim() || !location.trim() || !rent.trim() || !deposit.trim()) {
@@ -113,6 +137,13 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         amount: Number(loanAmount) || 0,
         months: Number(loanMonths) || 0,
         monthlyPayment: Number(monthlyPayment) || 0,
+      },
+      depositRecord: {
+        paid: depositPaid === "true",
+        paidDate: depositPaidDate,
+        refunded: depositRefunded === "true",
+        refundDate: depositRefundDate,
+        notes: depositNotes,
       },
       rentRecords: property.rentRecords || [],
     };
@@ -160,33 +191,47 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         onChange={handleChange}
       />
 
-      <input
-        type="text"
-        name="image"
-        placeholder="Image URL"
-        value={formData.image}
-        onChange={handleChange}
-      />
-
-      <select name="currency" value={formData.currency} onChange={handleChange}>
-        <option value="EUR">€</option>
-        <option value="CNY">¥</option>
-      </select>
-
-      {/* 租客信息 */}
-      <input
-        type="text"
-        name="tenantName"
-        placeholder="Tenant Name"
-        value={formData.tenantName}
-        onChange={handleChange}
-      />
-
+      {/* 押金记录 */}
+      <h3>Deposit Record</h3>
+      <label>
+        Paid:
+        <select
+          name="depositPaid"
+          value={formData.depositPaid}
+          onChange={handleChange}
+        >
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </label>
       <input
         type="date"
-        name="moveInDate"
-        placeholder="Move-in Date"
-        value={formData.moveInDate}
+        name="depositPaidDate"
+        value={formData.depositPaidDate}
+        onChange={handleChange}
+      />
+      <label>
+        Refunded:
+        <select
+          name="depositRefunded"
+          value={formData.depositRefunded}
+          onChange={handleChange}
+        >
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </label>
+      <input
+        type="date"
+        name="depositRefundDate"
+        value={formData.depositRefundDate}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="depositNotes"
+        placeholder="Notes"
+        value={formData.depositNotes}
         onChange={handleChange}
       />
 
@@ -211,6 +256,30 @@ const EditProperty = ({ propertyList, onUpdate }) => {
         name="monthlyPayment"
         placeholder="Monthly Payment"
         value={formData.monthlyPayment}
+        onChange={handleChange}
+      />
+
+      {/* 其它字段按需添加 */}
+
+      <select name="currency" value={formData.currency} onChange={handleChange}>
+        <option value="EUR">€</option>
+        <option value="CNY">¥</option>
+      </select>
+
+      {/* 租客信息 */}
+      <input
+        type="text"
+        name="tenantName"
+        placeholder="Tenant Name"
+        value={formData.tenantName}
+        onChange={handleChange}
+      />
+
+      <input
+        type="date"
+        name="moveInDate"
+        placeholder="Move-in Date"
+        value={formData.moveInDate}
         onChange={handleChange}
       />
 
