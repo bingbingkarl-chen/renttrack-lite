@@ -1,107 +1,145 @@
 import React, { useState } from "react";
-import transactionsData from "../data/transactions";
-import properties from "../data/propertyData";
 
-const Transactions = () => {
-  const [transactions, setTransactions] = useState(transactionsData);
-
-  // 用于新增收支
+function Transactions({ propertyList, transactions, setTransactions }) {
   const [form, setForm] = useState({
-    propertyId: properties[0]?.id || "",
-    type: "expense",
+    type: "Income",
     category: "",
     amount: "",
     currency: "EUR",
+    property: "",
     date: "",
-    description: "",
+    note: "",
   });
 
-  // 简单分类选项
-  const categories = [
-    "rent",
-    "loan",
-    "utility",
-    "management",
-    "repair",
-    "other"
-  ];
-
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleAdd = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.amount || !form.date || !form.category) return;
-    const newTx = { ...form, id: Date.now(), amount: Number(form.amount) };
-    setTransactions([newTx, ...transactions]);
+    if (!form.amount || !form.date) return;
+    setTransactions((prev) => [
+      ...prev,
+      { ...form, amount: Number(form.amount) },
+    ]);
     setForm({
-      propertyId: properties[0]?.id || "",
-      type: "expense",
+      type: "Income",
       category: "",
       amount: "",
       currency: "EUR",
+      property: "",
       date: "",
-      description: "",
+      note: "",
     });
   };
 
   return (
-    <div style={{ maxWidth: 600, margin: "0 auto" }}>
-      <h2>收支明细表（Transactions）</h2>
-      <form onSubmit={handleAdd} style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20 }}>
-        <select name="propertyId" value={form.propertyId} onChange={handleChange}>
-          {properties.map(p => (
-            <option key={p.id} value={p.id}>{p.title}</option>
-          ))}
-        </select>
+    <div style={{ maxWidth: 600, margin: "2rem auto" }}>
+      <h2>Transactions</h2>
+      <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
         <select name="type" value={form.type} onChange={handleChange}>
-          <option value="income">收入</option>
-          <option value="expense">支出</option>
+          <option value="Income">Income</option>
+          <option value="Expense">Expense</option>
         </select>
-        <select name="category" value={form.category} onChange={handleChange}>
-          <option value="">选择类别</option>
-          {categories.map(c => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-        <input type="number" name="amount" placeholder="金额" value={form.amount} onChange={handleChange} style={{ width: 80 }} />
-        <select name="currency" value={form.currency} onChange={handleChange}>
+        <input
+          type="text"
+          name="category"
+          placeholder="Category (e.g. Rent/Repair)"
+          value={form.category}
+          onChange={handleChange}
+          style={{ marginLeft: 8 }}
+        />
+        <input
+          type="number"
+          name="amount"
+          placeholder="Amount"
+          value={form.amount}
+          onChange={handleChange}
+          style={{ width: 80, marginLeft: 8 }}
+        />
+        <select
+          name="currency"
+          value={form.currency}
+          onChange={handleChange}
+          style={{ marginLeft: 8 }}
+        >
           <option value="EUR">€</option>
           <option value="CNY">¥</option>
         </select>
-        <input type="date" name="date" value={form.date} onChange={handleChange} style={{ width: 130 }} />
-        <input type="text" name="description" placeholder="备注" value={form.description} onChange={handleChange} style={{ width: 120 }} />
-        <button type="submit">添加</button>
+        <select
+          name="property"
+          value={form.property}
+          onChange={handleChange}
+          style={{ marginLeft: 8 }}
+        >
+          <option value="">Select Property</option>
+          {propertyList.map((p) => (
+            <option key={p.id} value={p.title}>
+              {p.title}
+            </option>
+          ))}
+        </select>
+        <input
+          type="date"
+          name="date"
+          value={form.date}
+          onChange={handleChange}
+          style={{ marginLeft: 8 }}
+        />
+        <input
+          type="text"
+          name="note"
+          placeholder="Note"
+          value={form.note}
+          onChange={handleChange}
+          style={{ marginLeft: 8, width: 100 }}
+        />
+        <button type="submit" style={{ marginLeft: 8 }}>
+          Add
+        </button>
       </form>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+
+      <table border="1" cellPadding="4" style={{ width: "100%" }}>
         <thead>
           <tr>
-            <th>房产</th>
-            <th>类型</th>
-            <th>类别</th>
-            <th>金额</th>
-            <th>币种</th>
-            <th>日期</th>
-            <th>备注</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Property</th>
+            <th>Amount</th>
+            <th>Note</th>
           </tr>
         </thead>
         <tbody>
-          {transactions.map(tx => (
-            <tr key={tx.id}>
-              <td>{properties.find(p => p.id == tx.propertyId)?.title || tx.propertyId}</td>
-              <td>{tx.type === "income" ? "收入" : "支出"}</td>
-              <td>{tx.category}</td>
-              <td style={{ textAlign: "right" }}>{tx.amount}</td>
-              <td>{tx.currency}</td>
-              <td>{tx.date}</td>
-              <td>{tx.description}</td>
+          {!transactions || transactions.length === 0 ? (
+            <tr>
+              <td colSpan={6} align="center">
+                No records
+              </td>
             </tr>
-          ))}
+          ) : (
+            transactions.map((t, idx) => (
+              <tr key={idx}>
+                <td>{t.date}</td>
+                <td>{t.type}</td>
+                <td>{t.category}</td>
+                <td>{t.property}</td>
+                <td>
+                  {t.currency}
+                  {t.amount}
+                </td>
+                <td>{t.note}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
   );
-};
+}
 
 export default Transactions;

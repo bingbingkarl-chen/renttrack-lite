@@ -9,16 +9,15 @@ import PaymentSummary from "./components/PaymentSummary";
 import SearchAndFilter from "./components/SearchAndFilter";
 import Transactions from "./pages/Transactions";
 import BalanceSheet from "./pages/BalanceSheet";
-
 import "./styles/App.css";
 
 function App() {
   const [propertyList, setPropertyList] = useState(() => {
     const savedData = localStorage.getItem("renttrack-data");
-
     return savedData ? JSON.parse(savedData) : propertyData;
   });
   const [transactions, setTransactions] = useState([]);
+
   useEffect(() => {
     localStorage.setItem("renttrack-data", JSON.stringify(propertyList));
   }, [propertyList]);
@@ -136,9 +135,14 @@ function App() {
         />
         <Route
           path="/transactions"
-          element={<Transactions propertyList={propertyList} />}
+          element={
+            <Transactions
+              propertyList={propertyList}
+              transactions={transactions}
+              setTransactions={setTransactions}
+            />
+          }
         />
-
         <Route
           path="/balancesheet"
           element={<BalanceSheet transactions={transactions} />}
@@ -147,5 +151,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
