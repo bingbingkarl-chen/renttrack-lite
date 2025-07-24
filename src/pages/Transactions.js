@@ -10,6 +10,7 @@ function Transactions({ propertyList, transactions, setTransactions }) {
     date: "",
     note: "",
   });
+  console.log("Transactions页面的transactions", transactions);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

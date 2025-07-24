@@ -16,12 +16,21 @@ function App() {
     const savedData = localStorage.getItem("renttrack-data");
     return savedData ? JSON.parse(savedData) : propertyData;
   });
-  const [transactions, setTransactions] = useState([]);
+
+  const [transactions, setTransactions] = useState(() => {
+    const saved = localStorage.getItem("renttrack-transactions");
+    return saved ? JSON.parse(saved) : [];
+  });
 
   useEffect(() => {
     localStorage.setItem("renttrack-data", JSON.stringify(propertyList));
   }, [propertyList]);
-
+  useEffect(() => {
+    localStorage.setItem(
+      "renttrack-transactions",
+      JSON.stringify(transactions)
+    );
+  }, [transactions]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all"); // 'all' | 'paid' | 'unpaid'
 
@@ -83,8 +92,7 @@ function App() {
     <div className="app-container">
       <h1>RentTrack Lite</h1>
 
-      <PaymentSummary propertyList={propertyList} />
-
+      <PaymentSummary propertyList={propertyList} transactions={transactions} />
       <Routes>
         <Route
           path="/"
@@ -117,7 +125,6 @@ function App() {
             </>
           }
         />
-
         <Route
           path="/property/:id"
           element={
@@ -133,6 +140,7 @@ function App() {
             <EditProperty propertyList={propertyList} onUpdate={handleUpdate} />
           }
         />
+
         <Route
           path="/transactions"
           element={

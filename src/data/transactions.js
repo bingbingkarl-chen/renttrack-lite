@@ -37,6 +37,10 @@ function Transactions({ propertyList, transactions, setTransactions }) {
     });
   };
 
+  const handleDelete = (idx) => {
+    setTransactions((prev) => prev.filter((_, i) => i !== idx));
+  };
+
   return (
     <div style={{ maxWidth: 600, margin: "2rem auto" }}>
       <h2>Transactions</h2>
@@ -112,12 +116,13 @@ function Transactions({ propertyList, transactions, setTransactions }) {
             <th>Property</th>
             <th>Amount</th>
             <th>Note</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {!transactions || transactions.length === 0 ? (
             <tr>
-              <td colSpan={6} align="center">
+              <td colSpan={7} align="center">
                 No records
               </td>
             </tr>
@@ -133,6 +138,9 @@ function Transactions({ propertyList, transactions, setTransactions }) {
                   {t.amount}
                 </td>
                 <td>{t.note}</td>
+                <td>
+                  <button onClick={() => handleDelete(idx)}>Delete</button>
+                </td>
               </tr>
             ))
           )}
